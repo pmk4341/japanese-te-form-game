@@ -1,4 +1,4 @@
-import {readFile, mkdir, writeFile} from 'node:fs/promises';
+import {readFile, mkdir, writeFile, copyFile} from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root),'utf8');
 let html = await read('index.html');
@@ -26,3 +26,5 @@ html = html.replace('</body>', () => downloadScript + '\n</body>');
 await mkdir(new URL('dist/',root),{recursive:true});
 await writeFile(new URL('dist/game.html',root),html);
 console.log('Built dist/game.html — self-contained, no server or external resources required.');
+
+for (const file of ['qr.png', 'qr.svg']) await copyFile(new URL('public/' + file, root), new URL('dist/' + file, root));
